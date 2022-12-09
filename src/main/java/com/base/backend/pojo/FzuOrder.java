@@ -2,6 +2,9 @@ package com.base.backend.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -12,24 +15,27 @@ import java.util.Date;
  * @created: 2022/12/09 14:21
  */
 
+
 public class FzuOrder {
     @TableId(type = IdType.AUTO)
     private Integer id;                 /* 主键， 自增 */
-    private Integer orderId;            /* 订单号 */
+    private String orderId;            /* 订单号 */
     private Integer dinerId;            /* 食客id */
     private Integer staffId;            /* 服务职员id */
-    private Integer status;             /* 服务状态 0 表示未配餐, 1 表示开始配餐, 2 结束配餐*/
+    private Integer seatId;             /* 座位号 */
+    private Integer status;             /* 服务状态 0 未结算, 1 表示未配餐, 2 表示开始配餐, 3 结束配餐*/
     private Double total;               /* 总价 */
     private Date createTime;            /* 订单创建时间 */
     private Date startTime;             /* 订单开始配送时间 */
     private Date finishTime;            /* 订单完成配送时间 */
 
-    public FzuOrder(Integer id, Integer orderId, Integer dinerId, Integer staffId,
-                    Integer status, Double total, Date createTime, Date startTime, Date finishTime) {
+    public FzuOrder(Integer id, String orderId, Integer dinerId, Integer staffId, 
+                    Integer seatId, Integer status, Double total, Date createTime, Date startTime, Date finishTime) {
         this.id = id;
         this.orderId = orderId;
         this.dinerId = dinerId;
         this.staffId = staffId;
+        this.seatId = seatId;
         this.status = status;
         this.total = total;
         this.createTime = createTime;
@@ -48,12 +54,20 @@ public class FzuOrder {
         this.id = id;
     }
 
-    public Integer getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Integer orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public Integer getSeatId() {
+        return seatId;
+    }
+
+    public void setSeatId(Integer seatId) {
+        this.seatId = seatId;
     }
 
     public Integer getDinerId() {

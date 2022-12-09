@@ -1,8 +1,6 @@
 package com.base.backend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.base.backend.common.R;
 import com.base.backend.factory.FoodFactory;
 import com.base.backend.mapper.DishMapper;
