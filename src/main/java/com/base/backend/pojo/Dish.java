@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
  * @created: 2022/12/09 13:51
  */
 
-public abstract class Dish {
+public class Dish {
     @TableId(type = IdType.AUTO)
     private Integer id;         /* 主键id */
     private Integer type;        /* 类别 */

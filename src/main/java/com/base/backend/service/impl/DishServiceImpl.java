@@ -1,14 +1,20 @@
 package com.base.backend.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.base.backend.common.R;
 import com.base.backend.factory.FoodFactory;
 import com.base.backend.mapper.DishMapper;
 import com.base.backend.pojo.Dish;
 import com.base.backend.pojo.vo.AddDishVo;
+import com.base.backend.pojo.vo.ModifyDishVo;
 import com.base.backend.service.DishService;
 import com.base.backend.utils.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @program: diningHall
@@ -44,5 +50,39 @@ public class DishServiceImpl implements DishService {
         
         return R.ok();
     }
-}
 
+    @Override
+    public R modify(ModifyDishVo dish) {
+        Integer userType = UserType.getUserType();
+
+        if(userType != 0) {
+            return R.error().message("您没有此权限进行此操作");
+        }
+        
+        Integer id = dish.getId();
+        Integer type = dish.getType();
+        String ingredient = dish.getIngredient();
+        String name = dish.getName();
+        Double price = dish.getPrice();
+
+        if(id== null || type == null || ingredient == null || name == null || price == null || ingredient.length() == 0 || name.length() == 0) {
+            return R.error().message("有参数为空");
+        }
+        
+        Dish dish1 = FoodFactory.addDish(new AddDishVo(type, ingredient, name, price));
+        dish1.setId(id);
+        
+        dishMapper.updateById(dish1);
+        
+        return R.ok();
+    }
+
+    @Override
+    public R getDish() {
+        QueryWrapper<Dish> wrapper = new QueryWrapper<>();
+        wrapper.orderByAsc("type");
+        List<Dish> dishes = dishMapper.selectList(wrapper);
+        return R.ok().data("dishes", dishes);
+    }
+
+}
