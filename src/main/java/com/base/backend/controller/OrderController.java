@@ -4,9 +4,7 @@ import com.base.backend.common.R;
 import com.base.backend.pojo.vo.SendOrderVo;
 import com.base.backend.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @program: diningHall
@@ -28,6 +26,11 @@ public class OrderController {
     @PostMapping("/send/order")
     public R sendOrder(@RequestBody SendOrderVo sendOrderVo){
         return orderService.sendOrder(sendOrderVo);
+    }
+    
+    @GetMapping("/settlement/order")
+    public R settlement(@RequestParam Integer id) {
+        return orderService.settlement(id);
     }
 }
 

@@ -9,4 +9,7 @@ import java.util.List;
 
 public interface OrderService {
     R sendOrder(SendOrderVo sendOrderVo);
+
+
+    R settlement(Integer id);
 }
