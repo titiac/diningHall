@@ -2,6 +2,7 @@ package com.base.backend.controller;
 
 import com.base.backend.common.R;
 import com.base.backend.pojo.vo.LoginVo;
+import com.base.backend.pojo.vo.RechargeVo;
 import com.base.backend.pojo.vo.RegisterVo;
 import com.base.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ public class UserController {
     @GetMapping("/getInfo")
     public R getInfo() {
         return userService.getInfo();
+    }
+    
+    @PostMapping("/recharge")
+    public R recharge(@RequestBody RechargeVo rechargeVo){
+        return userService.recharge(rechargeVo);
     }
 }
 

@@ -6,6 +6,7 @@ import com.base.backend.common.ResultEnum;
 import com.base.backend.mapper.UserMapper;
 import com.base.backend.pojo.User;
 import com.base.backend.pojo.vo.LoginVo;
+import com.base.backend.pojo.vo.RechargeVo;
 import com.base.backend.pojo.vo.RegisterVo;
 import com.base.backend.service.UserService;
 import com.base.backend.service.impl.utils.UserDetailsImpl;
@@ -119,6 +120,27 @@ public class UserServiceImpl implements UserService {
         UserDetailsImpl loginUser = (UserDetailsImpl) authentication.getPrincipal();
         User user = loginUser.getUser();
         return R.ok().data("myselfInfo", user);
+    }
+
+    @Override
+    public R recharge(RechargeVo rechargeVo) {
+        UsernamePasswordAuthenticationToken authentication =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+
+        UserDetailsImpl loginUser = (UserDetailsImpl) authentication.getPrincipal();
+        User user = loginUser.getUser();
+        
+        Double recharge = rechargeVo.getRecharge();
+        if(recharge <= 0.0) {
+            return R.ok().message("充值金额需大于零");
+        }
+        
+        Double balance = user.getBalance();
+        balance = balance + recharge;
+        user.setBalance(balance);
+        userMapper.updateById(user);
+        
+        return R.ok().message("充值成功!");
     }
 }
 
