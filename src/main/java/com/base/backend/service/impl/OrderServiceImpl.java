@@ -2,9 +2,11 @@ package com.base.backend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.base.backend.common.R;
+import com.base.backend.mapper.DishMapper;
 import com.base.backend.mapper.OrderDetailMapper;
 import com.base.backend.mapper.OrderMapper;
 import com.base.backend.mapper.UserMapper;
+import com.base.backend.pojo.Dish;
 import com.base.backend.pojo.FzuOrder;
 import com.base.backend.pojo.OrderDetail;
 import com.base.backend.pojo.User;
@@ -12,17 +14,13 @@ import com.base.backend.pojo.vo.OrderDishVo;
 import com.base.backend.pojo.vo.SendOrderVo;
 import com.base.backend.service.OrderService;
 import com.base.backend.service.impl.utils.UserDetailsImpl;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @program: diningHall
@@ -42,6 +40,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private UserMapper userMapper;
     
+    @Autowired
+    private DishMapper dishMapper;
+    
     @Override
     public R sendOrder(SendOrderVo sendOrderVo) {
         User user = getUser();
@@ -51,14 +52,14 @@ public class OrderServiceImpl implements OrderService {
         Date createTime = new Date();
         SimpleDateFormat sdf=new SimpleDateFormat("yyMMddHHmmssSSS");
         Random r = new Random();
-        String order_id = "OO" + sdf.format(new Date()) + r.nextInt(9);
+        String orderNo = "OO" + sdf.format(new Date()) + r.nextInt(9);
         
         Integer seat_id = sendOrderVo.getSeatId();
-        FzuOrder fzuOrder = new FzuOrder(null, order_id, dinerId, null, seat_id, 0, total, createTime, null, null);
+        FzuOrder fzuOrder = new FzuOrder(null, orderNo, dinerId, null, seat_id, 0, total, createTime, null, null);
         
         orderMapper.insert(fzuOrder);
         QueryWrapper<FzuOrder> wrapper = new QueryWrapper<>();
-        wrapper.eq("order_id", order_id);
+        wrapper.eq("order_no", orderNo);
         FzuOrder olderOrder = orderMapper.selectOne(wrapper);
 
         List<OrderDishVo> orderDishVos = sendOrderVo.getOrderDishVos();
@@ -104,6 +105,49 @@ public class OrderServiceImpl implements OrderService {
         userMapper.updateById(user);
         
         return R.ok().message("支付成功！");
+    }
+
+    @Override
+    public R customerGetOrder() {
+        User user = getUser();
+
+        QueryWrapper<FzuOrder> wrapper = new QueryWrapper<>();
+        wrapper.eq("diner_id", user.getId());
+        List<FzuOrder> fzuOrders = orderMapper.selectList(wrapper);
+
+        return R.ok().data("orders", fzuOrders);
+    }
+
+    @Override
+    public R getOrderDetail(Integer id) {
+        QueryWrapper<OrderDetail> wrapper = new QueryWrapper<>();
+        
+        wrapper.eq("order_id", id);
+        
+        List<OrderDetail> orderDetails = orderDetailMapper.selectList(wrapper);
+        
+        List<Map<String,Object>> dishes = new ArrayList<>();
+        
+        for(OrderDetail orderDetail : orderDetails) {
+            Map<String, Object> map = new HashMap<>();
+            Dish dish = dishMapper.selectById(orderDetail.getDishId());
+            map.put("dish", dish);
+            map.put("num", orderDetail.getNum());
+            dishes.add(map);
+        }
+        
+        return R.ok().data("dishes", dishes);
+    }
+
+    @Override
+    public R adminGetOrder() {
+        QueryWrapper<FzuOrder> wrapper = new QueryWrapper<>();
+        wrapper.ne("status", 0)
+                .orderByAsc("create_time");
+
+        List<FzuOrder> fzuOrders = orderMapper.selectList(wrapper);
+        
+        return R.ok().data("orders", fzuOrders);
     }
 
     public User getUser() {

@@ -28,9 +28,45 @@ public class OrderController {
         return orderService.sendOrder(sendOrderVo);
     }
     
+    /**
+     * @Author: zhw
+     * @Description:  结算订单
+     * @DateTime: 2022/12/10 18:50
+     */
     @GetMapping("/settlement/order")
     public R settlement(@RequestParam Integer id) {
         return orderService.settlement(id);
+    }
+    
+    /**
+     * @Author: zhw
+     * @Description: 客户获取自己的订单
+     * @DateTime: 2022/12/10 18:51
+     */
+    @GetMapping("/customer/get/order")
+    public R customerGetOrder(){
+        return orderService.customerGetOrder();
+    }
+    
+    /**
+     * @Author: zhw
+     * @Description: 管理员获取已结算的订单
+     * @DateTime: 2022/12/10 18:58
+     */
+    @GetMapping("/admin/get/order")
+    public R adminGetOrder(){
+        return orderService.adminGetOrder();
+    }
+    
+    
+    /**
+     * @Author: zhw
+     * @Description: 获取订单详情
+     * @DateTime: 2022/12/10 23:23
+     */
+    @GetMapping("/get/order/detail")
+    public R getOrderDetail(@RequestParam Integer id){
+        return orderService.getOrderDetail(id);
     }
 }
 

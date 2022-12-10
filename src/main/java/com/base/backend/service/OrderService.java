@@ -12,4 +12,10 @@ public interface OrderService {
 
 
     R settlement(Integer id);
+
+    R customerGetOrder();
+
+    R getOrderDetail(Integer id);
+
+    R adminGetOrder();
 }
