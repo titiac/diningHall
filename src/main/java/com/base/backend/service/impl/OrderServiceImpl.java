@@ -10,6 +10,7 @@ import com.base.backend.pojo.Dish;
 import com.base.backend.pojo.FzuOrder;
 import com.base.backend.pojo.OrderDetail;
 import com.base.backend.pojo.User;
+import com.base.backend.pojo.vo.AdminDeliveryVo;
 import com.base.backend.pojo.vo.OrderDishVo;
 import com.base.backend.pojo.vo.SendOrderVo;
 import com.base.backend.service.OrderService;
@@ -145,9 +146,59 @@ public class OrderServiceImpl implements OrderService {
         wrapper.ne("status", 0)
                 .orderByAsc("create_time");
 
+        // TODO: 还需要将未配餐的放在前面
+        
+        
         List<FzuOrder> fzuOrders = orderMapper.selectList(wrapper);
         
         return R.ok().data("orders", fzuOrders);
+    }
+
+    @Override
+    public R adminStartDelivery(AdminDeliveryVo adminDeliveryVo) {
+        User user = getUser();
+        
+        if(user.getType() != 0) {
+            return R.error().message("非法操作");
+        }
+        
+        Integer orderId = adminDeliveryVo.getOrderId();
+        Integer status = adminDeliveryVo.getStatus();
+        
+        if(orderId == null || status == null) {
+            return R.error().message("参数缺失！");
+        }
+        
+        if(status != 2 && status != 3) {
+            return R.error().message("参数错误");
+        }
+        
+        QueryWrapper<FzuOrder> wrapper = new QueryWrapper<>();
+        FzuOrder fzuOrder = orderMapper.selectById(orderId);
+        
+        if(fzuOrder == null) {
+            return R.error().message("未找到订单！");
+        }
+        fzuOrder.setStatus(status);
+        fzuOrder.setStaffId(user.getId());
+        if(status == 2) {
+            fzuOrder.setStartTime(new Date());
+        } else {
+            Double balance = user.getBalance();
+            balance = balance + fzuOrder.getTotal();
+            user.setBalance(balance);
+            userMapper.updateById(user);
+            fzuOrder.setFinishTime(new Date());
+        }
+        orderMapper.updateById(fzuOrder);
+        Map<String, Object> map = new HashMap<>();
+        map.put("dinerId", fzuOrder.getDinerId());
+        map.put("seatId", fzuOrder.getSeatId());
+        if(status == 3) {
+            return R.ok().data(map);
+        } 
+        
+        return R.ok();
     }
 
     public User getUser() {

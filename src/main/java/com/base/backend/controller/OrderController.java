@@ -1,6 +1,7 @@
 package com.base.backend.controller;
 
 import com.base.backend.common.R;
+import com.base.backend.pojo.vo.AdminDeliveryVo;
 import com.base.backend.pojo.vo.SendOrderVo;
 import com.base.backend.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,8 +66,19 @@ public class OrderController {
      * @DateTime: 2022/12/10 23:23
      */
     @GetMapping("/get/order/detail")
-    public R getOrderDetail(@RequestParam Integer id){
-        return orderService.getOrderDetail(id);
+    public R getOrderDetail(@RequestParam Integer orderId){
+        return orderService.getOrderDetail(orderId);
     }
+    
+    /**
+     * @Author: zhw
+     * @Description: 管理员配餐开始
+     * @DateTime: 2022/12/10 23:59
+     */
+    @PostMapping("/admin/delivery")
+    public R adminStartDelivery(@RequestBody AdminDeliveryVo adminDeliveryVo){
+        return orderService.adminStartDelivery(adminDeliveryVo);
+    }
+    
+    
 }
-

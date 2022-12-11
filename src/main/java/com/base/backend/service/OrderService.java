@@ -2,6 +2,7 @@ package com.base.backend.service;
 
 
 import com.base.backend.common.R;
+import com.base.backend.pojo.vo.AdminDeliveryVo;
 import com.base.backend.pojo.vo.OrderDishVo;
 import com.base.backend.pojo.vo.SendOrderVo;
 
@@ -18,4 +19,7 @@ public interface OrderService {
     R getOrderDetail(Integer id);
 
     R adminGetOrder();
+
+    R adminStartDelivery(AdminDeliveryVo adminDeliveryVo);
+    
 }

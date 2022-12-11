@@ -34,14 +34,15 @@ public class UserController {
         return userService.login(loginVo);
     }
     
-//    @GetMapping("/getInfo")
-//    public R getInfo() {
-//        return userService.getInfo();
-//    }
+    @GetMapping("/getInfo")
+    public R getInfo() {
+        return userService.getInfo();
+    }
     
     @PostMapping("/recharge")
     public R recharge(@RequestBody RechargeVo rechargeVo){
         return userService.recharge(rechargeVo);
     }
+    
 }
 
