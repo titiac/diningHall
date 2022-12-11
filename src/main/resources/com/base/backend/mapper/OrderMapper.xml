@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.base.backend.mapper.OrderMapper">
+
+
+    <select id="getAverageDeliveryTime" resultType="java.lang.Integer">
+        SELECT AVG(TIMESTAMPDIFF(MINUTE,start_time,finish_time)) as timediff 
+        from fzu_order 
+        where staff_id = #{staffId} and finish_time is not null ;
+    </select>
+    <select id="getPeriodNumber" resultType="java.util.Map">
+        SELECT
+            concat(
+                DATE_FORMAT(
+                    ADDDATE(
+                        DATE_FORMAT( concat( DATE ( create_time ), ' ',( floor(( HOUR ( create_time ) / 8 )) * 8 )), '%Y-%m-%d %H' ),
+                        INTERVAL 8 HOUR 
+			        ),
+                    '%H~'
+                ),
+                DATE_FORMAT(
+                    ADDDATE(
+                        DATE_FORMAT( concat( DATE ( create_time ), ' ',( floor(( HOUR ( create_time ) / 8 )) * 8 )), '%Y-%m-%d %H' ),
+                        INTERVAL 16 HOUR 
+			        ),
+                    '%H'
+                )
+            ) AS time_period,
+	    COUNT(*) as number
+        FROM
+            fzu_order
+        where TO_DAYS(#{date}) - TO_DAYS(create_time)  &lt;= 1
+        and status != 0
+        GROUP BY
+            time_period
+        ORDER BY
+            time_period asc;
+    </select>
+</mapper>

@@ -6,4 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface OrderDetailMapper extends BaseMapper<OrderDetail> {
+    
+    Integer getWorkLoad(Integer staffId);
+    
 }

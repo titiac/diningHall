@@ -206,6 +206,70 @@ public class OrderServiceImpl implements OrderService {
         return R.ok();
     }
 
+    @Override
+    public R adminGetPeriodNum() {
+        User user = getUser();
+
+        if(user.getType() != 0) {
+            return R.error().message("非法操作");
+        }
+        
+        List<Map<String, Object>> periodNumberList = orderMapper.getPeriodNumber(new Date());
+        List<Map<String, Object>> returnList = new ArrayList<>();
+        Integer[] cmp = new Integer[3];
+        for(int i = 0; i < 3; i ++) cmp[i] = 0;
+        
+        System.out.println(periodNumberList);
+        for(Map<String, Object> map : periodNumberList) {
+            if(map.get("time_period").equals("00~08")) {
+                cmp[0] = Integer.parseInt(String.valueOf(map.get("number")));
+            } else if(map.get("time_period").equals("08~16")) {
+                cmp[1] = Integer.parseInt(String.valueOf(map.get("number")));
+            } else if(map.get("time_period").equals("16~00")) {
+                cmp[2] = Integer.parseInt(String.valueOf(map.get("number")));
+            }
+        }
+        
+        if(cmp[0] == 0) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("time_period", "00~08");
+            map.put("number", 0);
+            returnList.add(map);
+        } else {
+            Map<String, Object> map = new HashMap<>();
+            map.put("time_period", "00~08");
+            map.put("number", cmp[0]);
+            returnList.add(map);
+        }
+        
+        if(cmp[1] == 0) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("time_period", "08~16");
+            map.put("number", 0);
+            returnList.add(map);
+        } else {
+            Map<String, Object> map = new HashMap<>();
+            map.put("time_period", "08~16");
+            map.put("number", cmp[1]);
+            returnList.add(map);
+        }
+
+        if(cmp[2] == 0) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("time_period", "16~00");
+            map.put("number", 0);
+            returnList.add(map);
+        } else {
+            Map<String, Object> map = new HashMap<>();
+            map.put("time_period", "16~00");
+            map.put("number", cmp[2]);
+            returnList.add(map);
+        }
+        
+        System.out.println(Arrays.toString(cmp));
+        return R.ok().data("periodNumberList", returnList);
+    }
+
     public User getUser() {
         UsernamePasswordAuthenticationToken authentication =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();

@@ -72,7 +72,7 @@ public class OrderController {
     
     /**
      * @Author: zhw
-     * @Description: 管理员配餐开始
+     * @Description: 管理员配餐
      * @DateTime: 2022/12/10 23:59
      */
     @PostMapping("/admin/delivery")
@@ -80,5 +80,8 @@ public class OrderController {
         return orderService.adminStartDelivery(adminDeliveryVo);
     }
     
-    
+    @PostMapping("/admin/getPeriodNum")
+    public R adminGetPeriodNum(){
+        return orderService.adminGetPeriodNum();
+    }
 }

@@ -21,5 +21,6 @@ public interface OrderService {
     R adminGetOrder();
 
     R adminStartDelivery(AdminDeliveryVo adminDeliveryVo);
-    
+
+    R adminGetPeriodNum();
 }

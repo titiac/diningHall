@@ -3,6 +3,8 @@ package com.base.backend.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.base.backend.common.R;
 import com.base.backend.common.ResultEnum;
+import com.base.backend.mapper.OrderDetailMapper;
+import com.base.backend.mapper.OrderMapper;
 import com.base.backend.mapper.UserMapper;
 import com.base.backend.pojo.User;
 import com.base.backend.pojo.vo.LoginVo;
@@ -23,7 +25,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @program: base
@@ -40,6 +41,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+    
+    @Autowired
+    private OrderMapper orderMapper;
+    
+    @Autowired
+    private OrderDetailMapper orderDetailMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -119,7 +126,22 @@ public class UserServiceImpl implements UserService {
 
         UserDetailsImpl loginUser = (UserDetailsImpl) authentication.getPrincipal();
         User user = loginUser.getUser();
-        return R.ok().data("myselfInfo", user);
+        
+        if(user.getType() != 0) {
+            // 
+            return R.ok().data("myselfInfo", user);
+        }
+
+        Integer averageDeliveryMinute = orderMapper.getAverageDeliveryTime(user.getId());
+        
+        Integer workload = orderDetailMapper.getWorkLoad(user.getId());
+        
+        Map<String, Object> map = new HashMap<>();
+        map.put("myselfInfo", user);
+        map.put("averageDeliveryMinute", averageDeliveryMinute);
+        map.put("workload", workload);
+        
+        return  R.ok().data(map);
     }
 
     @Override
