@@ -142,11 +142,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public R adminGetOrder() {
+        User user = getUser();
+
+        if(user.getType() != 0) {
+            return R.error().message("非法操作");
+        }
+        
         QueryWrapper<FzuOrder> wrapper = new QueryWrapper<>();
         wrapper.ne("status", 0)
+                .orderByAsc("status")
                 .orderByAsc("create_time");
-
-        // TODO: 还需要将未配餐的放在前面
         
         
         List<FzuOrder> fzuOrders = orderMapper.selectList(wrapper);
