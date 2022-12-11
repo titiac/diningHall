@@ -12,7 +12,9 @@ import com.base.backend.utils.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: diningHall
@@ -81,6 +83,18 @@ public class DishServiceImpl implements DishService {
         wrapper.orderByAsc("type");
         List<Dish> dishes = dishMapper.selectList(wrapper);
         return R.ok().data("dishes", dishes);
+    }
+
+    @Override
+    public R getPopularDish() {
+        Integer userType = UserType.getUserType();
+
+        if(userType != 0) {
+            return R.error().message("您没有此权限进行此操作");
+        }
+        
+        List<Map<String, Object>> list = dishMapper.getPopularDish(new Date());
+        return R.ok().data("PopularDishes", list);
     }
 
 }

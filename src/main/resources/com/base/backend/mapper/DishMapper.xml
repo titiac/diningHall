@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.base.backend.mapper.DishMapper">
+
+
+    <select id="getPopularDish" resultType="java.util.Map">
+        SELECT
+            a.id,
+            a.ingredient,
+            a.name,
+            a.photo,
+            a.price,
+            a.type,
+            IFNULL( t1.count1, 0 ) AS num
+        FROM
+            dish AS a
+            LEFT JOIN (
+                SELECT
+                    c.dish_id,
+                    count(*) AS count1
+                FROM
+                    ( SELECT * FROM order_detail WHERE order_id IN ( SELECT id FROM fzu_order WHERE TO_DAYS( NOW()) - TO_DAYS( create_time )) &lt;= 30 ) AS c
+                WHERE
+                    c.dish_id IN ( SELECT id FROM dish )
+                GROUP BY
+                    c.dish_id
+            ) AS t1 ON a.id = t1.dish_id
+        ORDER BY
+            num DESC;
+    </select>
+</mapper>

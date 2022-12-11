@@ -10,4 +10,6 @@ public interface DishService {
     R modify(ModifyDishVo dish);
 
     R getDish();
+
+    R getPopularDish();
 }

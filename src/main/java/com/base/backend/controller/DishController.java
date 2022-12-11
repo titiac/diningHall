@@ -35,5 +35,10 @@ public class DishController {
     public R getDishList(){
         return dishService.getDish();
     }
+    
+    @GetMapping("/admin/getPopularDish")
+    public R getPopularDish(){
+        return dishService.getPopularDish();
+    }
 }
 
