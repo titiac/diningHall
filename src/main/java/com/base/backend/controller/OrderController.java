@@ -80,7 +80,7 @@ public class OrderController {
         return orderService.adminStartDelivery(adminDeliveryVo);
     }
     
-    @PostMapping("/admin/getPeriodNum")
+    @GetMapping("/admin/getPeriodNum")
     public R adminGetPeriodNum(){
         return orderService.adminGetPeriodNum();
     }
