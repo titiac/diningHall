@@ -97,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
             return R.error().message("您的余额不足，请及时缴费！");
         }
         
-        fzuOrder.setStatus(1);
+        fzuOrder.setStatus(2);
         orderMapper.updateById(fzuOrder);
         
         Double balance = user.getBalance();
@@ -113,7 +113,7 @@ public class OrderServiceImpl implements OrderService {
         User user = getUser();
 
         QueryWrapper<FzuOrder> wrapper = new QueryWrapper<>();
-        wrapper.eq("diner_id", user.getId());
+        wrapper.eq("diner_id", user.getId()).orderByAsc("create_time");
         List<FzuOrder> fzuOrders = orderMapper.selectList(wrapper);
 
         return R.ok().data("orders", fzuOrders);
@@ -174,7 +174,7 @@ public class OrderServiceImpl implements OrderService {
             return R.error().message("参数缺失！");
         }
         
-        if(status != 2 && status != 3) {
+        if(status != 1 && status != 3) {
             return R.error().message("参数错误");
         }
         
@@ -186,7 +186,7 @@ public class OrderServiceImpl implements OrderService {
         }
         fzuOrder.setStatus(status);
         fzuOrder.setStaffId(user.getId());
-        if(status == 2) {
+        if(status == 1) {
             fzuOrder.setStartTime(new Date());
         } else {
             Double balance = user.getBalance();
@@ -199,6 +199,7 @@ public class OrderServiceImpl implements OrderService {
         Map<String, Object> map = new HashMap<>();
         map.put("dinerId", fzuOrder.getDinerId());
         map.put("seatId", fzuOrder.getSeatId());
+        map.put("orderNo", fzuOrder.getOrderNo());
         if(status == 3) {
             return R.ok().data(map);
         } 

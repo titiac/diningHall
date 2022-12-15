@@ -24,7 +24,7 @@ public class FzuOrder {
     private Integer dinerId;            /* 食客id */
     private Integer staffId;            /* 服务职员id */
     private Integer seatId;             /* 座位号 */
-    private Integer status;             /* 服务状态 0 未结算, 1 表示结算未配餐, 2 表示开始配餐, 3 结束配餐*/
+    private Integer status;             /* 服务状态 0 未结算, 1 表示开始配餐, 2 表示结算未配餐, 3 结束配餐*/
     private Double total;               /* 总价 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:SS", timezone = "Asia/Shanghai")
     private Date createTime;            /* 订单创建时间 */
