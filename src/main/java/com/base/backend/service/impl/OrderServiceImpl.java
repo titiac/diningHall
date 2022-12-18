@@ -74,8 +74,8 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDishVo> orderDishVos = sendOrderVo.getOrderDishVos();
         
         for(OrderDishVo orderDishVo : orderDishVos){
-            Integer dishId = orderDishVo.getDishId();
-            Integer num = orderDishVo.getNum();
+            Integer dishId = orderDishVo.getId();
+            Integer num = orderDishVo.getCount();
             if(num <= 0) continue;
             orderDetailMapper.insert(new OrderDetail(null, olderOrder.getId(), dishId, num));
         }

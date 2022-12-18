@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class OrderDishVo {
-    private Integer dishId;
-    private Integer num;
+    private Integer id;
+    private Integer count;
     private double price;
 }
