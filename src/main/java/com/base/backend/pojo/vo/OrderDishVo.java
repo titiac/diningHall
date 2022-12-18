@@ -17,4 +17,5 @@ import lombok.NoArgsConstructor;
 public class OrderDishVo {
     private Integer dishId;
     private Integer num;
+    private double price;
 }

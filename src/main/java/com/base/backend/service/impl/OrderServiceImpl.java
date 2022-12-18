@@ -56,7 +56,15 @@ public class OrderServiceImpl implements OrderService {
         String orderNo = "OO" + sdf.format(new Date()) + r.nextInt(9);
         
         Integer seat_id = sendOrderVo.getSeatId();
-        FzuOrder fzuOrder = new FzuOrder(null, orderNo, dinerId, null, seat_id, 0, total, createTime, null, null);
+        Integer status = -1;
+        if(user.getBalance() >= total) {
+            status = 2;
+            user.setBalance(user.getBalance() - total);
+            userMapper.updateById(user);
+        } else {
+            return R.error().message("余额不足请及时缴费");
+        }
+        FzuOrder fzuOrder = new FzuOrder(null, orderNo, dinerId, null, seat_id, status, total, createTime, null, null);
         
         orderMapper.insert(fzuOrder);
         QueryWrapper<FzuOrder> wrapper = new QueryWrapper<>();
@@ -68,6 +76,7 @@ public class OrderServiceImpl implements OrderService {
         for(OrderDishVo orderDishVo : orderDishVos){
             Integer dishId = orderDishVo.getDishId();
             Integer num = orderDishVo.getNum();
+            if(num <= 0) continue;
             orderDetailMapper.insert(new OrderDetail(null, olderOrder.getId(), dishId, num));
         }
         
