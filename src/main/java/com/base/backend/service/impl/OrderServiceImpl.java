@@ -122,10 +122,36 @@ public class OrderServiceImpl implements OrderService {
         User user = getUser();
 
         QueryWrapper<FzuOrder> wrapper = new QueryWrapper<>();
-        wrapper.eq("diner_id", user.getId()).orderByAsc("create_time");
+        wrapper.eq("diner_id", user.getId())
+                .and(i -> i.eq("status", 2))
+                .orderByAsc("create_time");
         List<FzuOrder> fzuOrders = orderMapper.selectList(wrapper);
+        if(fzuOrders.isEmpty()) {
+            return R.ok().message("您没有正在配送的订单");
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("order", fzuOrders.get(0));
 
-        return R.ok().data("orders", fzuOrders);
+        QueryWrapper<FzuOrder> wrapper1 = new QueryWrapper<>();
+        wrapper1.eq("status", 2)
+                .orderByAsc("create_time");
+        
+        List<FzuOrder> fzuOrderList = orderMapper.selectList(wrapper1);
+        
+        
+        int count = 0;
+        for(FzuOrder fzuOrder : fzuOrderList) {
+            System.out.println(fzuOrder.getId());
+            if (Objects.equals(fzuOrder, fzuOrders.get(0))) {
+                map.put("queue", count);
+                break;
+            }
+            count ++;
+        }
+
+        map.putIfAbsent("queue", 0);
+        
+        return R.ok().data(map);
     }
 
     @Override
