@@ -15,6 +15,7 @@ import com.base.backend.pojo.vo.OrderDishVo;
 import com.base.backend.pojo.vo.SendOrderVo;
 import com.base.backend.service.OrderService;
 import com.base.backend.service.impl.utils.UserDetailsImpl;
+import com.sun.org.apache.xpath.internal.operations.And;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -48,6 +49,17 @@ public class OrderServiceImpl implements OrderService {
     public R sendOrder(SendOrderVo sendOrderVo) {
         User user = getUser();
         Integer dinerId = user.getId();
+
+        QueryWrapper<FzuOrder> wrapper1 = new QueryWrapper<>();
+        wrapper1.eq("diner_id", dinerId)
+                .and(i -> i.ne("status", 3))
+                .and(i -> i.ne("status", 0));
+        
+        List<FzuOrder> fzuOrderList = orderMapper.selectList(wrapper1);
+        if(!fzuOrderList.isEmpty()) {
+            return R.error().message("您有订单还未完成请勿重复提交");
+        }
+
         Double total = sendOrderVo.getTotal();
         
         Date createTime = new Date();
@@ -142,15 +154,13 @@ public class OrderServiceImpl implements OrderService {
         int count = 0;
         for(FzuOrder fzuOrder : fzuOrderList) {
             System.out.println(fzuOrder.getId());
-            if (Objects.equals(fzuOrder, fzuOrders.get(0))) {
+            if (Objects.equals(fzuOrder.getId(), fzuOrders.get(0).getId())) {
                 map.put("queue", count);
                 break;
             }
             count ++;
         }
-
-        map.putIfAbsent("queue", 0);
-        
+        System.out.println(map);
         return R.ok().data(map);
     }
 
@@ -302,7 +312,7 @@ public class OrderServiceImpl implements OrderService {
             returnList.add(map);
         }
         
-        System.out.println(Arrays.toString(cmp));
+
         return R.ok().data("periodNumberList", returnList);
     }
 
