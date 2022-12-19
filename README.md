@@ -6,3 +6,4 @@
 + IDEA 2022.2.3
 + maven 3.8.3
 + MySQL 8.0
++ swagger
