@@ -306,6 +306,39 @@ public class OrderServiceImpl implements OrderService {
         return R.ok().data("periodNumberList", returnList);
     }
 
+    @Override
+    public R getOrderStatus(Integer orderId) {
+        if(orderId == null) {
+            return R.error().message("参数为空");
+        }
+        
+        FzuOrder fzuOrder = orderMapper.selectById(orderId);
+        
+        if(fzuOrder == null) {
+            return R.error().message("未找到订单");
+        }
+        
+        Integer status = fzuOrder.getStatus();
+        
+        if(status == 0) {
+            return R.ok().message("未结算");
+        }
+        
+        if(status == 1) {
+            return R.ok().message("正在配送");
+        }
+        
+        if(status == 2) {
+            return R.ok().message("未配送");
+        }
+        
+        if(status == 3) {
+            return R.ok().message("配送完成");
+        }
+        
+        return null;
+    }
+
     public User getUser() {
         UsernamePasswordAuthenticationToken authentication =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();

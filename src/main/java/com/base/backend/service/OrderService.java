@@ -23,4 +23,6 @@ public interface OrderService {
     R adminStartDelivery(AdminDeliveryVo adminDeliveryVo);
 
     R adminGetPeriodNum();
+
+    R getOrderStatus(Integer orderId);
 }

@@ -84,4 +84,14 @@ public class OrderController {
     public R adminGetPeriodNum(){
         return orderService.adminGetPeriodNum();
     }
+    
+    /**
+     * @Author: zhw
+     * @Description: 查询订单状态
+     * @DateTime: 2022/12/19 10:24
+     */
+    @GetMapping("/get/order/status")
+    public R getOrderStatus(@RequestParam Integer orderId){
+        return orderService.getOrderStatus(orderId);
+    }
 }
