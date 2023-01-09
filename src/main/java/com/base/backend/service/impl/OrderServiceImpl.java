@@ -228,6 +228,11 @@ public class OrderServiceImpl implements OrderService {
         if(fzuOrder == null) {
             return R.error().message("未找到订单！");
         }
+        
+        if(fzuOrder.getStatus() == 3) {
+            return R.error().message("该订单已完成");
+        }
+        
         fzuOrder.setStatus(status);
         fzuOrder.setStaffId(user.getId());
         if(status == 1) {
