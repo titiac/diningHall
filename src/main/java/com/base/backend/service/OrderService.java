@@ -25,4 +25,6 @@ public interface OrderService {
     R adminGetPeriodNum();
 
     R getOrderStatus(Integer orderId);
+
+    R customerGetAllOrder();
 }

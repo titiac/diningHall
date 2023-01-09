@@ -94,4 +94,10 @@ public class OrderController {
     public R getOrderStatus(@RequestParam Integer orderId){
         return orderService.getOrderStatus(orderId);
     }
+    
+    @GetMapping("/customer/get/allOrder")
+    public R customerGetAllOrder(){
+        return  orderService.customerGetAllOrder();
+    }
+    
 }

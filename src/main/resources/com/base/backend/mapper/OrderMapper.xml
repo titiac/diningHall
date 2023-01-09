@@ -37,4 +37,29 @@
         ORDER BY
             time_period asc;
     </select>
+    <select id="getCustomerAllOrder" resultType="com.base.backend.pojo.vo.CustomerGetAllOrderVo">
+        SELECT
+            *
+        FROM
+            (
+                SELECT
+                    x.*,
+                    y.queue
+                FROM
+                    fzu_order x
+                        LEFT JOIN (
+                        SELECT
+                            a.*,
+                            rank() over ( ORDER BY a.`status` ) AS queue
+                        FROM
+                                ( SELECT * FROM fzu_order WHERE STATUS = 1 OR STATUS = 2 ORDER BY `status` ) a
+                    ) y ON x.id = y.id
+            ) z
+        WHERE
+            z.diner_id = #{userId}
+        ORDER BY
+            id DESC;
+    </select>
+
+
 </mapper>

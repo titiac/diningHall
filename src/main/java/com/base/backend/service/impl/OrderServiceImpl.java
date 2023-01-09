@@ -11,6 +11,7 @@ import com.base.backend.pojo.FzuOrder;
 import com.base.backend.pojo.OrderDetail;
 import com.base.backend.pojo.User;
 import com.base.backend.pojo.vo.AdminDeliveryVo;
+import com.base.backend.pojo.vo.CustomerGetAllOrderVo;
 import com.base.backend.pojo.vo.OrderDishVo;
 import com.base.backend.pojo.vo.SendOrderVo;
 import com.base.backend.service.OrderService;
@@ -351,6 +352,14 @@ public class OrderServiceImpl implements OrderService {
         }
         
         return null;
+    }
+
+    @Override
+    public R customerGetAllOrder() {
+        User user = getUser();
+        
+        List<CustomerGetAllOrderVo> list = orderMapper.getCustomerAllOrder(user.getId());
+        return R.ok().data("orders", list);
     }
 
     public User getUser() {
