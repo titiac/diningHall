@@ -50,7 +50,7 @@
                         LEFT JOIN (
                         SELECT
                             a.*,
-                            rank() over ( ORDER BY a.`status` ) AS queue
+                            ROW_NUMBER() over ( ORDER BY a.`status` ) AS queue
                         FROM
                                 ( SELECT * FROM fzu_order WHERE STATUS = 1 OR STATUS = 2 ORDER BY `status` ) a
                     ) y ON x.id = y.id
