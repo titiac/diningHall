@@ -15,7 +15,6 @@ import com.base.backend.pojo.vo.OrderDishVo;
 import com.base.backend.pojo.vo.SendOrderVo;
 import com.base.backend.service.OrderService;
 import com.base.backend.service.impl.utils.UserDetailsImpl;
-import com.sun.org.apache.xpath.internal.operations.And;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

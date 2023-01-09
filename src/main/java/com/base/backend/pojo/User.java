@@ -10,6 +10,7 @@ public class User {
     private String username;
     private String password;
     private Double balance;
+    
     private Integer type;
 
     public User(Integer id, String username, String password, Double balance, Integer type) {

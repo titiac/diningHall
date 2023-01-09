@@ -6,7 +6,7 @@ import com.base.backend.pojo.vo.dish.*;
 
 /**
  * @program: diningHall
- * @description: 事物工厂类
+ * @description: 食物工厂类
  * @author: zhw
  * @created: 2022/12/09 16:29
  */
