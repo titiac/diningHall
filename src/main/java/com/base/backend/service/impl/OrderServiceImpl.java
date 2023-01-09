@@ -50,15 +50,15 @@ public class OrderServiceImpl implements OrderService {
         User user = getUser();
         Integer dinerId = user.getId();
 
-        QueryWrapper<FzuOrder> wrapper1 = new QueryWrapper<>();
-        wrapper1.eq("diner_id", dinerId)
-                .and(i -> i.ne("status", 3))
-                .and(i -> i.ne("status", 0));
-        
-        List<FzuOrder> fzuOrderList = orderMapper.selectList(wrapper1);
-        if(!fzuOrderList.isEmpty()) {
-            return R.error().message("您有订单还未完成请勿重复提交");
-        }
+//        QueryWrapper<FzuOrder> wrapper1 = new QueryWrapper<>();
+//        wrapper1.eq("diner_id", dinerId)
+//                .and(i -> i.ne("status", 3))
+//                .and(i -> i.ne("status", 0));
+//        
+//        List<FzuOrder> fzuOrderList = orderMapper.selectList(wrapper1);
+//        if(!fzuOrderList.isEmpty()) {
+//            return R.error().message("您有订单还未完成请勿重复提交");
+//        }
 
         Double total = sendOrderVo.getTotal();
         

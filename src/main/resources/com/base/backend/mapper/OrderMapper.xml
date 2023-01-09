@@ -58,7 +58,7 @@
         WHERE
             z.diner_id = #{userId}
         ORDER BY
-            id DESC;
+            status ASC;
     </select>
 
 
